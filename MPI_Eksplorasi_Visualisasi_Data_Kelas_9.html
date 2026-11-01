@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eksplorasi & Visualisasi Data Tanaman | Informatika Kelas 9</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+<style>
+:root{--green:#198754;--green2:#eaf6ef;--ink:#1e293b;--muted:#64748b;--line:#e5eaf0;--bg:#f5f7f6;--white:#fff;--shadow:0 8px 28px rgba(15,23,42,.055)}
+body.dark{--ink:#e5edf5;--muted:#a8b6c7;--line:#334155;--bg:#111827;--white:#1f2937;--green2:#173c2b;--shadow:0 8px 28px rgba(0,0,0,.22)}
+body.dark .sidebar{background:#0b1712}body.dark .panel,body.dark .stat,body.dark .status,body.dark .control-btn,body.dark .small-btn,body.dark .select{background:#1f2937;color:var(--ink);border-color:var(--line)}
+body.dark th{background:#263548;color:#c5d1df}body.dark td{border-color:#334155}body.dark tbody tr:hover{background:#263548}body.dark .metric{background:#263548}body.dark .slide-title{color:#72d49b}body.dark .question{background:#183326;border-color:#315a43}body.dark .question p{color:#c2d3c8}body.dark .insight{border-color:var(--line)}body.dark .eyebrow{color:#72d49b}body.dark .nav-btn.active,body.dark .nav-btn:hover{background:#24583f}body.dark .dot.ok{background:#4ade80}body.dark .chart-panel{color:var(--ink)}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}
+button{font:inherit;cursor:pointer}.app{min-height:100vh;display:flex}.sidebar{width:250px;background:#123d2b;color:white;padding:26px 18px;position:fixed;inset:0 auto 0 0;display:flex;flex-direction:column;z-index:5}
+.brand{display:flex;align-items:center;gap:12px;padding:2px 8px 30px}.brand-mark{width:42px;height:42px;border-radius:14px;background:#d9f4e3;color:#17663e;display:grid;place-items:center;font-size:22px}.brand b{display:block;font-size:14px;letter-spacing:.2px}.brand small{color:#b8d6c5;font-size:11px}
+.nav-label{font-size:10px;letter-spacing:1.4px;color:#9bbdaa;padding:10px 12px}.nav-btn{border:0;background:transparent;color:#d7e8de;text-align:left;padding:13px 14px;border-radius:11px;margin:3px 0;display:flex;align-items:center;gap:12px;font-weight:600;font-size:13px}.nav-btn span{font-size:17px;width:20px;text-align:center}.nav-btn.active,.nav-btn:hover{background:#24583f;color:#fff}.side-note{margin-top:auto;background:#1c4b35;border:1px solid #37664e;padding:14px;border-radius:13px;color:#d7e8de;font-size:11px;line-height:1.6}
+.main{margin-left:250px;width:calc(100% - 250px);padding:30px 38px 55px;max-width:1600px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:27px}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.3px;color:var(--green);font-weight:800}.topbar h1{font-size:25px;margin:5px 0 0;letter-spacing:-.6px}.status{display:flex;align-items:center;gap:8px;padding:9px 13px;background:#fff;border:1px solid var(--line);border-radius:30px;color:var(--muted);font-size:11px}.dot{width:8px;height:8px;border-radius:50%;background:#f59e0b}.dot.ok{background:#22c55e}.intro{background:linear-gradient(115deg,#164d34,#23784d);color:white;padding:25px 28px;border-radius:18px;display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:22px;box-shadow:var(--shadow)}.intro h2{margin:0 0 7px;font-size:21px}.intro p{margin:0;color:#d5eadc;font-size:13px;max-width:650px;line-height:1.6}.intro-icon{font-size:54px;opacity:.9}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}.stat,.panel{background:white;border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow)}.stat{padding:17px 18px}.stat .label{font-size:11px;color:var(--muted);font-weight:600}.stat .value{font-size:25px;font-weight:800;margin-top:7px}.stat .sub{font-size:10px;color:#8491a2;margin-top:4px}
+.panel{padding:20px;margin-bottom:18px}.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}.panel h3{font-size:15px;margin:0 0 5px}.panel-head p,.hint{font-size:11px;color:var(--muted);margin:0;line-height:1.5}.section-title{font-size:18px;margin:5px 0 5px}.section-desc{font-size:12px;color:var(--muted);margin:0 0 18px}.page{display:none}.page.active{display:block}.card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:11px}table{border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap}th{background:#f3f7f4;color:#536477;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.5px;padding:12px 14px}td{padding:12px 14px;border-top:1px solid #edf0f2}tbody tr:hover{background:#f8fbf9}.pill{display:inline-flex;background:#eaf6ef;color:#187044;padding:4px 9px;border-radius:20px;font-weight:700;font-size:10px}
+.slider-card{display:flex;flex-direction:column;min-height:255px}.slide-title{font-size:19px;font-weight:800;color:#176b41}.slide-number{font-size:10px;color:var(--muted)}.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}.metric{background:#f5f9f6;padding:16px 12px;border-radius:12px;text-align:center}.metric strong{display:block;font-size:25px;color:#176b41}.metric span{font-size:10px;color:var(--muted)}.slider-controls{display:flex;justify-content:space-between;align-items:center;margin-top:auto}.control-btn,.small-btn{border:1px solid var(--line);background:white;border-radius:9px;padding:8px 12px;color:#334155;font-size:11px;font-weight:700}.control-btn:hover,.small-btn:hover{background:var(--green2);border-color:#b8dfc7}.dots{display:flex;gap:5px}.dots i{width:6px;height:6px;background:#d5ded8;border-radius:50%}.dots i.active{background:var(--green);width:17px;border-radius:8px}
+.chart-box{height:280px;position:relative}.chart-panel{min-height:360px}.chart-controls{display:flex;gap:8px;flex-wrap:wrap}.select{border:1px solid var(--line);background:white;padding:8px 10px;border-radius:9px;font-size:11px;color:#334155}
+.question{background:#f4faf6;border:1px solid #dcefe2;padding:15px;border-radius:12px;margin-top:12px}.question b{font-size:12px}.question p{font-size:11px;color:#536477;line-height:1.6;margin:6px 0 0}.insight-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.insight{padding:14px;border:1px solid var(--line);border-radius:12px}.insight small{color:var(--muted);font-size:10px}.insight strong{display:block;margin-top:6px;font-size:13px}
+.empty{padding:28px;text-align:center;color:var(--muted);font-size:12px}.loading{color:#a16207}.error{color:#b91c1c}.footer{text-align:center;color:#94a3b8;font-size:10px;padding:15px}
+@media(max-width:900px){.sidebar{width:210px}.main{margin-left:210px;width:calc(100% - 210px);padding:24px}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.app{display:block}.sidebar{position:sticky;top:0;width:100%;height:auto;padding:10px 12px;display:block}.brand{padding:0 5px 9px}.brand-mark{width:34px;height:34px}.nav-label,.side-note{display:none}.nav-list{display:flex;gap:5px;overflow:auto}.nav-btn{white-space:nowrap;padding:9px 11px;font-size:11px;margin:0}.nav-btn span{font-size:14px;width:auto}.main{margin:0;width:100%;padding:19px 14px 35px}.topbar h1{font-size:20px}.status{font-size:9px}.intro{padding:20px}.intro h2{font-size:18px}.intro-icon{font-size:38px}.stats{gap:9px}.stat{padding:13px}.stat .value{font-size:21px}.card-grid,.insight-grid{grid-template-columns:1fr}.panel{padding:15px}.chart-box{height:250px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="brand-mark">🌱</div><div><b>DATA EXPLORER</b><small>Informatika • Kelas 9</small></div></div>
+  <div class="nav-label">MENU PEMBELAJARAN</div>
+  <div class="nav-list">
+    <button class="nav-btn active" data-page="home"><span>⌂</span>Beranda</button>
+    <button class="nav-btn" data-page="explore"><span>▤</span>Eksplorasi Data</button>
+    <button class="nav-btn" data-page="analysis"><span>▥</span>Analisis Data</button>
+  </div>
+  <div class="side-note">💡 <b>Alur belajar</b><br>Kenali data, temukan pola, bandingkan hasil, lalu buat kesimpulan berdasarkan bukti.</div>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <div><div class="eyebrow">Media Pembelajaran Interaktif</div><h1>Eksplorasi & Visualisasi Data</h1></div>
+    <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap"><button class="small-btn" id="themeToggle" onclick="toggleTheme()" aria-label="Aktifkan mode malam">☾ Mode malam</button><div class="status"><i class="dot" id="statusDot"></i><span id="statusText">Menghubungkan API...</span></div></div>
+  </header>
+
+  <section id="home" class="page active">
+    <div class="intro"><div><h2>Selamat datang, Peneliti Data! 👋</h2><p>Amati data tanaman dari berbagai kelas. Gunakan tabel dan visualisasi untuk menemukan informasi, membandingkan kondisi tanaman, dan menyusun kesimpulan.</p></div><div class="intro-icon">🌿</div></div>
+    <div class="stats">
+      <div class="stat"><div class="label">TOTAL DATA TANAMAN</div><div class="value" id="totalData">—</div><div class="sub">Jumlah seluruh catatan tanaman</div></div>
+      <div class="stat"><div class="label">JUMLAH KELAS</div><div class="value" id="totalClass">—</div><div class="sub">Kelas yang memiliki data</div></div>
+      <div class="stat"><div class="label">RATA-RATA TINGGI</div><div class="value" id="overallHeight">—</div><div class="sub">Dalam satuan sesuai pencatatan</div></div>
+      <div class="stat"><div class="label">TOTAL POHON</div><div class="value" id="totalPlants">—</div><div class="sub">Akumulasi jumlah pohon per lubang</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div><h3>Data Tanaman Seluruh Kelas</h3><p>Data mentah yang diterima dari API.</p></div><button class="small-btn" onclick="loadData()">↻ Muat ulang</button></div>
+      <div class="table-wrap" id="rawTable"><div class="empty">Memuat data...</div></div>
+    </div>
+    <div class="panel slider-card">
+      <div class="panel-head"><div><h3>Jelajahi Data Berdasarkan Kelas</h3><p>Gunakan navigasi untuk melihat ringkasan data setiap kelas.</p></div><span class="slide-number" id="slideNumber">—</span></div>
+      <div id="classSlide"><div class="empty">Menunggu data...</div></div>
+      <div class="slider-controls"><button class="control-btn" onclick="moveSlide(-1)">← Sebelumnya</button><div class="dots" id="slideDots"></div><button class="control-btn" onclick="moveSlide(1)">Berikutnya →</button></div>
+    </div>
+  </section>
+
+  <section id="explore" class="page">
+    <div class="eyebrow">Tahap 02</div><h2 class="section-title">Eksplorasi Data</h2><p class="section-desc">Eksplorasi membantu kita memahami karakteristik data melalui ukuran pemusatan dan ukuran nilai ekstrem.</p>
+    <div class="card-grid">
+      <div class="panel"><div class="panel-head"><div><h3>1. Rata-rata Tanaman per Kelas</h3><p>Nilai rata-rata tinggi, jumlah pohon, dan daun.</p></div></div><div id="meanTable"></div></div>
+      <div class="panel"><div class="panel-head"><div><h3>2. Nilai Minimum per Kelas</h3><p>Nilai terendah pada setiap variabel.</p></div></div><div id="minTable"></div></div>
+      <div class="panel"><div class="panel-head"><div><h3>3. Nilai Maksimum per Kelas</h3><p>Nilai tertinggi pada setiap variabel.</p></div></div><div id="maxTable"></div></div>
+    </div>
+  </section>
+
+  <section id="analysis" class="page">
+    <div class="eyebrow">Tahap 03</div><h2 class="section-title">Analisis & Visualisasi Data</h2><p class="section-desc">Baca pola pada diagram. Perhatikan kategori, nilai, dan perbandingan sebelum menarik kesimpulan.</p>
+    <div class="panel">
+      <div class="panel-head"><div><h3>1. Perbandingan Data Tanaman Berdasarkan Kelas</h3><p>Geser untuk melihat diagram tinggi tanaman, jumlah pohon, dan banyak daun. Setiap batang mewakili satu kelas.</p></div><span class="slide-number" id="chartSlideNumber">1 / 3</span></div>
+      <div class="chart-controls"><button class="small-btn" onclick="changeStatChart(-1)">← Sebelumnya</button><button class="small-btn" onclick="changeStatChart(1)">Berikutnya →</button></div>
+      <h3 id="statChartTitle" style="font-size:13px;margin:15px 0 4px">Rata-rata tinggi tanaman per kelas</h3><div class="chart-box"><canvas id="statChart"></canvas></div>
+    </div>
+    <div class="card-grid">
+      <div class="panel chart-panel"><div class="panel-head"><div><h3>2. Rata-rata Tinggi Berdasarkan Banyak Daun</h3><p>Apakah kategori jumlah daun memiliki rata-rata tinggi berbeda?</p></div></div><div class="chart-box"><canvas id="leafHeightChart"></canvas></div></div>
+      <div class="panel chart-panel"><div class="panel-head"><div><h3>3. Rata-rata Tinggi Berdasarkan Jumlah Pohon</h3><p>Bandingkan rata-rata tinggi pada setiap jumlah pohon per lubang.</p></div></div><div class="chart-box"><canvas id="countHeightChart"></canvas></div></div>
+      <div class="panel chart-panel"><div class="panel-head"><div><h3>4. Persentase Jumlah Pohon per Lubang</h3><p>Frekuensi setiap kategori jumlah pohon.</p></div></div><div class="chart-box"><canvas id="countPie"></canvas></div></div>
+      <div class="panel chart-panel"><div class="panel-head"><div><h3>5. Perbandingan Tinggi terhadap Rata-rata</h3><p>Data dikelompokkan menjadi di atas, sama dengan, dan di bawah rata-rata.</p></div></div><div class="chart-box"><canvas id="heightPie"></canvas></div></div>
+      <div class="panel chart-panel"><div class="panel-head"><div><h3>6. Persentase Data Berdasarkan Banyak Daun</h3><p>Distribusi frekuensi jumlah daun tanaman.</p></div></div><div class="chart-box"><canvas id="leafPie"></canvas></div></div>
+    </div>
+    <div class="panel" style="margin-top:18px"><div class="panel-head"><div><h3>Temukan Informasi dari Data</h3><p>Gunakan hasil perhitungan sebagai petunjuk untuk menyusun kesimpulan.</p></div></div><div class="insight-grid" id="insights"></div>
+      <div class="question"><b>💭 Pertanyaan pemantik</b><p>1. Kelas mana yang memiliki rata-rata tinggi tanaman paling besar?<br>2. Kategori jumlah daun berapa yang memiliki rata-rata tinggi tanaman tertinggi?<br>3. Kategori jumlah pohon mana yang paling sering ditemukan?<br>4. Apa yang dapat kamu simpulkan dari perbandingan tinggi tanaman dengan rata-rata keseluruhan?<br>5. Apakah diagram menunjukkan hubungan sebab-akibat? Jelaskan mengapa data ini belum cukup untuk membuktikannya.</p></div>
+    </div>
+  </section>
+  <div class="footer">MPI Informatika Kelas 9 • Eksplorasi dan Visualisasi Data • Data diperbarui dari API</div>
+</main>
+</div>
+<script>
+const API_URL = "https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnSL83hEwEoxk5cNhu56iKzQfTuzmpoweE038BASW8fEAI-locKR6xwHwxkpe5mKDy4NJufJmOptYtuFLsB8pUW9iZnVeIiOe3i0nyyzQQxteGzyrrOxU5a73yMGsCd9hLlOP--uYaTWCe_IUFLFkMaC4jAzSTsIdqDp7yoronWwMSxh1XF8ac1GXNla8JATAFp0W1QDR-T2Kws7rp2De4fL2jbs2WoorCaMVoQjw1La5WFVwnICu_jpqo1H4F2jbUTxZT9bd4vvagNadJeQyZi7GZnENg&lib=MUa9UKjPA1zpU48-HHeM2RmN3HHdd7HYN";
+let data=[], classes=[], currentSlide=0, statIndex=0, charts={};
+const $=id=>document.getElementById(id);
+const fmt=n=>Number(n).toLocaleString('id-ID',{maximumFractionDigits:2});
+const avg=a=>a.length?a.reduce((s,x)=>s+x,0)/a.length:0;
+function groupByClass(){return classes.map(k=>({kelas:k,items:data.filter(d=>d.kelas===k)}))}
+function stats(items,key,mode='avg'){const a=items.map(x=>Number(x[key])).filter(Number.isFinite);return !a.length?0:mode==='min'?Math.min(...a):mode==='max'?Math.max(...a):avg(a)}
+function tableHTML(rows){return `<div class="table-wrap"><table><thead><tr><th>Kelas</th><th>Tinggi</th><th>Jumlah</th><th>Daun</th></tr></thead><tbody>${rows.map(r=>`<tr><td><span class="pill">${r.kelas}</span></td><td>${fmt(r.tinggi)}</td><td>${fmt(r.jumlah)}</td><td>${fmt(r.daun)}</td></tr>`).join('')}</tbody></table></div>`}
+function summaryRows(mode){return groupByClass().map(g=>({kelas:g.kelas,tinggi:stats(g.items,'tinggi',mode),jumlah:stats(g.items,'jumlah',mode),daun:stats(g.items,'daun',mode)}))}
+function renderTables(){
+  $('rawTable').innerHTML=`<div class="table-wrap"><table><thead><tr><th>No.</th><th>Kelas</th><th>Tinggi</th><th>Jumlah pohon</th><th>Daun</th></tr></thead><tbody>${data.map((d,i)=>`<tr><td>${i+1}</td><td><span class="pill">${d.kelas}</span></td><td>${fmt(d.tinggi)}</td><td>${fmt(d.jumlah)}</td><td>${fmt(d.daun)}</td></tr>`).join('')}</tbody></table></div>`;
+  $('meanTable').innerHTML=tableHTML(summaryRows('avg'));$('minTable').innerHTML=tableHTML(summaryRows('min'));$('maxTable').innerHTML=tableHTML(summaryRows('max'));
+  $('totalData').textContent=data.length;$('totalClass').textContent=classes.length;$('overallHeight').textContent=fmt(avg(data.map(x=>x.tinggi)));$('totalPlants').textContent=fmt(data.reduce((s,x)=>s+x.jumlah,0));
+}
+function renderClassSlide(){
+ if(!classes.length)return;currentSlide=(currentSlide+classes.length)%classes.length;const k=classes[currentSlide],items=data.filter(d=>d.kelas===k);
+ $('slideNumber').textContent=`${currentSlide+1} / ${classes.length}`;$('classSlide').innerHTML=`<div class="slide-title">Kelas ${k}</div><div class="hint">${items.length} catatan tanaman tercatat pada kelas ini.</div><div class="metric-grid"><div class="metric"><strong>${fmt(avg(items.map(x=>x.tinggi)))}</strong><span>Rata-rata tinggi</span></div><div class="metric"><strong>${fmt(avg(items.map(x=>x.jumlah)))}</strong><span>Rata-rata jumlah pohon</span></div><div class="metric"><strong>${fmt(avg(items.map(x=>x.daun)))}</strong><span>Rata-rata daun</span></div></div>`;
+ $('slideDots').innerHTML=classes.map((_,i)=>`<i class="${i===currentSlide?'active':''}"></i>`).join('');
+}
+function moveSlide(n){currentSlide+=n;renderClassSlide()}
+function makeChart(id,type,labels,datasets,opts={}){
+ if(charts[id])charts[id].destroy();
+ const ctx=$(id);if(!ctx)return;
+ const isPie=type==='pie'||type==='doughnut';
+ const baseOptions={
+  responsive:true,maintainAspectRatio:false,
+  layout:{padding:isPie?{top:18,right:35,bottom:18,left:35}: {top:20,right:18}},
+  plugins:{
+   legend:{display:isPie,position:'bottom',labels:{boxWidth:10,font:{size:10},color:labelColor()}},
+   datalabels:isPie?{
+    display:true,anchor:'end',align:'end',offset:12,clamp:false,clip:false,
+    color:labelColor(),font:{size:11,weight:'bold'},
+    formatter:(value,context)=>{const total=context.dataset.data.reduce((a,b)=>a+Number(b||0),0);return total?`${(value/total*100).toFixed(1).replace('.',',')}%`:'';}
+   }:{
+    display:true,anchor:'end',align:'end',offset:2,clamp:true,
+    color:labelColor(),font:{size:11,weight:'bold'},
+    formatter:value=>Number(value).toLocaleString('id-ID',{maximumFractionDigits:1})
+   }
+  },
+  scales:isPie?{}:{
+   y:{beginAtZero:true,ticks:{font:{size:10},color:labelColor()},grid:{color:document.body.classList.contains('dark')?'#374151':'#edf0f2'}},
+   x:{ticks:{font:{size:10},color:labelColor()},grid:{display:false}}
+  }
+ };
+ charts[id]=new Chart(ctx,{type,data:{labels,datasets},options:{...baseOptions,...opts,plugins:{...baseOptions.plugins,...(opts.plugins||{})},scales:opts.scales||baseOptions.scales}});
+}
+const palette=['#198754','#4f9fca','#e6a23c','#9270c5','#e27676','#64a69b','#9aa6b2','#c58b54'];
+if(window.ChartDataLabels) Chart.register(ChartDataLabels);
+function labelColor(){return document.body.classList.contains('dark')?'#f1f5f9':'#334155';}
+function renderStatChart(){
+ const keys=['tinggi','jumlah','daun'];
+ const titles=['Rata-rata tinggi tanaman per kelas','Rata-rata jumlah pohon per lubang berdasarkan kelas','Rata-rata banyak daun per kelas'];
+ const labels=['Tinggi tanaman','Jumlah pohon','Banyak daun'];
+ const colors=['#198754','#4f9fca','#e6a23c'];
+ const key=keys[statIndex],rows=summaryRows('avg');
+ $('statChartTitle').textContent=titles[statIndex];
+ $('chartSlideNumber').textContent=`${statIndex+1} / 3`;
+ makeChart('statChart','bar',classes,[{label:labels[statIndex],data:rows.map(r=>r[key]),backgroundColor:colors[statIndex],borderRadius:7,maxBarThickness:55}],{scales:{y:{beginAtZero:true}}});
+}
+function changeStatChart(n){statIndex=(statIndex+n+3)%3;renderStatChart()}
+function frequencies(key){const m=new Map();data.forEach(d=>m.set(d[key],(m.get(d[key])||0)+1));return [...m.entries()].sort((a,b)=>Number(a[0])-Number(b[0]))}
+function renderCharts(){
+ const leafGroups=frequencies('daun'),countGroups=frequencies('jumlah');
+ const meanBy=(groups,key)=>groups.map(([v])=>avg(data.filter(d=>d[key]===v).map(d=>d.tinggi)));
+ makeChart('leafHeightChart','bar',leafGroups.map(x=>String(x[0])),[{label:'Rata-rata tinggi',data:meanBy(leafGroups,'daun'),backgroundColor:'#198754'}]);
+ makeChart('countHeightChart','bar',countGroups.map(x=>String(x[0])),[{label:'Rata-rata tinggi',data:meanBy(countGroups,'jumlah'),backgroundColor:'#4f9fca'}]);
+ makeChart('countPie','pie',countGroups.map(x=>`${x[0]} pohon`),[{data:countGroups.map(x=>x[1]),backgroundColor:palette}]);
+ const overall=avg(data.map(x=>x.tinggi)),above=data.filter(x=>x.tinggi>overall).length,below=data.filter(x=>x.tinggi<overall).length,equal=data.length-above-below;
+ makeChart('heightPie','pie',['Di atas rata-rata','Di bawah rata-rata','Sama dengan rata-rata'],[{data:[above,below,equal],backgroundColor:['#198754','#e6a23c','#4f9fca']}]);
+ makeChart('leafPie','pie',leafGroups.map(x=>`${x[0]} daun`),[{data:leafGroups.map(x=>x[1]),backgroundColor:palette}]);
+ renderStatChart();renderInsights(above,below,equal,overall,leafGroups,countGroups);
+}
+function renderInsights(above,below,equal,overall,leafGroups,countGroups){
+ const classMeans=summaryRows('avg'),top=classMeans.reduce((a,b)=>b.tinggi>a.tinggi?b:a,classMeans[0]);
+ const maxLeaf=leafGroups.reduce((a,b)=>b[1]>a[1]?b:a,leafGroups[0]),maxCount=countGroups.reduce((a,b)=>b[1]>a[1]?b:a,countGroups[0]);
+ const items=[['Rata-rata tinggi keseluruhan',`${fmt(overall)} satuan`],['Rata-rata tinggi kelas tertinggi',`${top.kelas} • ${fmt(top.tinggi)} satuan`],['Jumlah daun paling sering muncul',`${maxLeaf[0]} daun • ${maxLeaf[1]} data`],['Jumlah pohon paling sering muncul',`${maxCount[0]} pohon • ${maxCount[1]} data`],['Tanaman di atas rata-rata',`${above} data (${fmt(above/data.length*100)}%)`],['Tanaman di bawah rata-rata',`${below} data (${fmt(below/data.length*100)}%)`]];
+ $('insights').innerHTML=items.map(x=>`<div class="insight"><small>${x[0]}</small><strong>${x[1]}</strong></div>`).join('');
+}
+function setStatus(ok,msg){$('statusDot').className=ok?'dot ok':'dot';$('statusText').textContent=msg}
+async function loadData(){
+ setStatus(false,'Mengambil data API...');
+ try{
+  const response=await fetch(API_URL,{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);
+  const json=await response.json();if(!Array.isArray(json))throw new Error('Format API harus berupa array JSON.');
+  data=json.map(d=>({kelas:String(d.kelas??'Tidak diketahui'),tinggi:Number(d.tinggi),jumlah:Number(d.jumlah),daun:Number(d.daun)})).filter(d=>Number.isFinite(d.tinggi)&&Number.isFinite(d.jumlah)&&Number.isFinite(d.daun));
+  if(!data.length)throw new Error('Tidak ada data valid pada API.');
+  classes=[...new Set(data.map(d=>d.kelas))].sort((a,b)=>a.localeCompare(b,'id',{numeric:true}));
+  renderTables();renderClassSlide();renderCharts();setStatus(true,`Terhubung • ${data.length} data`);
+ }catch(err){
+  console.error(err);setStatus(false,'API belum terhubung');
+  $('rawTable').innerHTML=`<div class="empty error"><b>Data API belum berhasil dimuat.</b><br>${err.message}<br><br>Periksa koneksi internet, URL API, dan izin akses Google Apps Script (akses publik/Anyone). Jika muncul pesan CORS, endpoint perlu disesuaikan agar mengizinkan permintaan dari browser.</div>`;
+  $('classSlide').innerHTML='<div class="empty">Data kelas belum tersedia.</div>';
+  ['meanTable','minTable','maxTable'].forEach(id=>$(id).innerHTML='<div class="empty">Data belum tersedia.</div>');
+ }
+}
+function toggleTheme(){
+ document.body.classList.toggle('dark');
+ const dark=document.body.classList.contains('dark');
+ $('themeToggle').textContent=dark?'☀ Mode siang':'☾ Mode malam';
+ $('themeToggle').setAttribute('aria-label',dark?'Aktifkan mode siang':'Aktifkan mode malam');
+ Object.values(charts).forEach(c=>c.destroy());charts={};
+ if(data.length)renderCharts();
+}
+document.querySelectorAll('.nav-btn').forEach(btn=>btn.addEventListener('click',()=>{function toggleTheme(){
+ document.body.classList.toggle('dark');
+ const dark=document.body.classList.contains('dark');
+ $('themeToggle').textContent=dark?'☀ Mode siang':'☾ Mode malam';
+ $('themeToggle').setAttribute('aria-label',dark?'Aktifkan mode siang':'Aktifkan mode malam');
+ Object.values(charts).forEach(c=>c.destroy());charts={};
+ if(data.length)renderCharts();
+}
+document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));btn.classList.add('active');$(btn.dataset.page).classList.add('active');if(btn.dataset.page==='analysis'&&data.length){setTimeout(()=>Object.values(charts).forEach(c=>c.resize()),50)}}));
+loadData();
+</script>
+</body>
+</html>
